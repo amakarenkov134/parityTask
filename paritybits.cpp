@@ -9,7 +9,7 @@ ParityBits::ParityBits(QWidget *parent)
     , ui(new Ui::parityBits)
 {
     ui->setupUi(this);
-
+    this->setWindowTitle("Методы обнаружения ошибок");
 }
 
 ParityBits::~ParityBits()
@@ -21,6 +21,7 @@ void ParityBits::on_checkButton_clicked()
 {
     QString str = ui->lineEditBinary->text();
     QMessageBox msgBox;
+    msgBox.setWindowTitle("Информация");
 
     if (str.isEmpty()) {
         msgBox.setText("Вы не ввели бинарное сообщение!");
@@ -30,6 +31,9 @@ void ParityBits::on_checkButton_clicked()
 
     if (ui->parityRadBtn->isChecked()) {
         ui->resOfCalcParityLabel->setText(calculateParityBits(str));
+
+        if (ui->imitateErrorsCheckBox->isChecked())
+            imitateErrors(str);
 
         if (checkDataParity(str, ui->resOfCalcParityLabel->text()))
             msgBox.setText("Ошибок нет");
@@ -49,7 +53,13 @@ void ParityBits::on_checkButton_clicked()
         QVector<QString> msg = splitBinaryString(str);
         ui->resOfCalcParityLabel->setText(verHorCalculateParity(msg));
 
-        if (checkDataVerHorParity(msg, calculateHorizontalParity(msg), calculateVerticalParity(msg, calculateHorizontalParity(msg))))
+        QString horParity = calculateHorizontalParity(msg);
+        QString verParity = calculateVerticalParity(msg);
+
+        if (ui->imitateErrorsCheckBox->isChecked())
+            imitateErrors(msg);
+
+        if (checkDataVerHorParity(msg, horParity, verParity))
             msgBox.setText("Ошибок нет");
         else
             msgBox.setText("Ошибка обнаружена!");
@@ -86,7 +96,7 @@ QString ParityBits::verHorCalculateParity(const QVector<QString> &message)
     QString horizontalParity = calculateHorizontalParity(message);
 
     // Вычисляем вертикальный паритет
-    QString verticalParity = calculateVerticalParity(message, horizontalParity);
+    QString verticalParity = calculateVerticalParity(message);
 
     return verticalParity;
 }
@@ -104,7 +114,7 @@ QString ParityBits::calculateHorizontalParity(const QVector<QString> &data)
     return parityBits;
 }
 
-QString ParityBits::calculateVerticalParity(const QVector<QString> &data, const QString &horizontalParity)
+QString ParityBits::calculateVerticalParity(const QVector<QString> &data)
 {
     QString verticalParity;
     int cols = data[0].size();
@@ -114,8 +124,7 @@ QString ParityBits::calculateVerticalParity(const QVector<QString> &data, const 
         for (int i = 0; i < data.size(); ++i) {
             if (data[i][j] == '1') count++;
         }
-        // Учитываем горизонтальный паритет
-        //if (horizontalParity[j / (cols / data.size())] == '1') count++;
+
         verticalParity += (count % 2 == 0) ? '0' : '1'; // Четный паритет
     }
     return verticalParity;
@@ -172,4 +181,22 @@ bool ParityBits::checkDataParity(const QString &receivedMessage, const QString &
 {
     QString calculatedParity = calculateParityBits(receivedMessage);
     return calculatedParity == receivedParity; // true, если ошибок нет
+}
+
+void ParityBits::imitateErrors(QVector<QString> &message)
+{
+    for (auto &str : message)
+        imitateErrors(str);
+}
+
+void ParityBits::imitateErrors(QString &message)
+{
+    unsigned int lastIndex;
+
+    lastIndex = message.size() - 1;
+
+    if (message[lastIndex] == '0')
+        message[lastIndex] = '1';
+    else
+        message[lastIndex] = '0';
 }

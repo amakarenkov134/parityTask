@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>466</width>
-    <height>177</height>
+    <height>181</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -37,11 +37,14 @@
       <layout class="QHBoxLayout" name="horizontalLayout_2">
        <item>
         <widget class="QLabel" name="calculateParityLabel">
+         <property name="midLineWidth">
+          <number>-1</number>
+         </property>
          <property name="text">
-          <string>calculateParity</string>
+          <string>Паритет для текущего сообщения</string>
          </property>
          <property name="alignment">
-          <set>Qt::AlignCenter</set>
+          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
          </property>
         </widget>
        </item>
@@ -76,11 +79,22 @@
       </layout>
      </item>
      <item row="3" column="0">
-      <widget class="QPushButton" name="checkButton">
-       <property name="text">
-        <string>Проверить</string>
-       </property>
-      </widget>
+      <layout class="QHBoxLayout" name="horizontalLayout_4">
+       <item>
+        <widget class="QCheckBox" name="imitateErrorsCheckBox">
+         <property name="text">
+          <string>Имитация ошибки</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="checkButton">
+         <property name="text">
+          <string>Проверить</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </item>
     </layout>
    </item>

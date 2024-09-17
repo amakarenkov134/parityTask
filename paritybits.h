@@ -30,12 +30,16 @@ private:
     QString verHorCalculateParity(const QVector<QString> &message);
 
     QString calculateHorizontalParity(const QVector<QString> &data);
-    QString calculateVerticalParity(const QVector<QString> &data, const QString &horizontalParity);
+    QString calculateVerticalParity(const QVector<QString> &data);
 
     QVector<QString> splitBinaryString(const QString& binaryString);
 
     bool checkDataVerHorParity(const QVector<QString> &data, const QString &horizontalParity, const QString &verticalParity);
 
     bool checkDataParity(const QString &receivedMessage, const QString &receivedParity);
+
+    void imitateErrors(QVector<QString> &message);
+
+    void imitateErrors(QString &message);
 };
 #endif // PARITYBITS_H
